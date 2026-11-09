@@ -38,6 +38,15 @@ AI 클라이언트(Claude Desktop, Claude Code 등)가 **지금 열려 있는 Mi
 
 새 버전은 이전 버전 **위쪽**에 `### <버전>` 제목으로 추가합니다. `push-release.ps1` 이 이 항목을 GitHub 릴리스 노트로 씁니다.
 
+### 0.7.3
+
+- `--install` 이 이 서버의 기존 등록을 이름이 아니라 실행 파일로 판정: 경로가 다르거나 파일이 없는 항목은 `--force` 없이 새 경로로 교체하고, 다른 이름으로 중복 등록된 항목은 정리합니다. 이름만 같은 다른 서버의 항목은 건드리지 않으며 `--force` 일 때만 교체/제거합니다
+- 통합 설치기로 설치하든 서버 exe 의 `--install` 을 직접 실행하든 같은 규칙으로 동작합니다. 등록이 거부되거나 실패하면 설치 결과 메시지에 그 이유(`--force` 필요 등)를 함께 표시
+- Claude Desktop 은 Microsoft Store 판과 일반 설치판을 각각 등록·해제(일반 설치판은 설정 파일이 있을 때만)
+- ChatGPT 데스크톱 앱 지원: Codex 와 `~/.codex/config.toml` 을 공유하므로 `codex` 클라이언트("Codex/ChatGPT") 하나로 함께 등록됩니다
+- Claude Code 의 프로젝트(로컬) 범위·`.mcp.json`, Codex 의 프로젝트 `.codex/config.toml` 에 같은 서버가 있으면(사용자 범위보다 우선) 고치지 않고 경고
+- JSON 설정을 고치기 전 백업을 `%LOCALAPPDATA%\McpOffice\backup\` 에 파일마다 하나만 둠(설정 폴더에 `.bak` 이 쌓이지 않음)
+
 ### 0.7.2
 
 - 서버 안내문과 도구 설명을 AI 가 기능 중심으로 이해하도록 정리: 문서 저장·닫기는 별도 도구, Outlook 메일은 초안으로 저장되어 사용자가 Outlook 에서 전송, 메일·작업 본문은 `include_body=true` 로 조회, `outlook_request_sync` 는 Outbox 의 메일도 함께 전송됨을 명시
