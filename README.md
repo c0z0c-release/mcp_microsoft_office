@@ -38,30 +38,33 @@ AI 클라이언트(Claude Desktop, Claude Code 등)가 **지금 열려 있는 Mi
 
 새 버전은 이전 버전 **위쪽**에 `### <버전>` 제목으로 추가합니다. `push-release.ps1` 이 이 항목을 GitHub 릴리스 노트로 씁니다.
 
+### 0.7.4
+
+- 설치 로그의 한글 깨짐 수정: 서버 메시지(UTF-8)와 예외 메시지(CP949)가 섞여도 줄마다 알맞은 인코딩으로 읽습니다
+- 설정 파일이 사용 중이라 클라이언트 등록이 실패하던 문제 수정: 잠시 재시도하고, 끝내 안 되면 그 클라이언트만 실패로 표시한 뒤 계속합니다
+- 설정 파일을 붙잡은 프로세스 종료 추가: 어떤 프로그램인지 알려 주고, 설치 화면은 종료 여부를 묻고 `--silent` 는 묻지 않고 종료합니다(서비스·탐색기·상위 프로세스는 제외). 서버 exe 직접 실행 시 `--close-clients`
+
 ### 0.7.3
 
-- `--install` 이 이 서버의 기존 등록을 이름이 아니라 실행 파일로 판정: 경로가 다르거나 파일이 없는 항목은 `--force` 없이 새 경로로 교체하고, 다른 이름으로 중복 등록된 항목은 정리합니다. 이름만 같은 다른 서버의 항목은 건드리지 않으며 `--force` 일 때만 교체/제거합니다
-- 통합 설치기로 설치하든 서버 exe 의 `--install` 을 직접 실행하든 같은 규칙으로 동작합니다. 등록이 거부되거나 실패하면 설치 결과 메시지에 그 이유(`--force` 필요 등)를 함께 표시
-- Claude Desktop 은 Microsoft Store 판과 일반 설치판을 각각 등록·해제(일반 설치판은 설정 파일이 있을 때만)
-- ChatGPT 데스크톱 앱 지원: Codex 와 `~/.codex/config.toml` 을 공유하므로 `codex` 클라이언트("Codex/ChatGPT") 하나로 함께 등록됩니다
-- Claude Code 의 프로젝트(로컬) 범위·`.mcp.json`, Codex 의 프로젝트 `.codex/config.toml` 에 같은 서버가 있으면(사용자 범위보다 우선) 고치지 않고 경고
-- JSON 설정을 고치기 전 백업을 `%LOCALAPPDATA%\McpOffice\backup\` 에 파일마다 하나만 둠(설정 폴더에 `.bak` 이 쌓이지 않음)
+- 클라이언트 등록을 실행 파일 기준으로 판정: 경로가 바뀌었거나 파일이 없는 항목은 새 경로로 교체하고 중복 항목은 정리합니다. 이름만 같은 다른 서버는 `--force` 일 때만 바꿉니다
+- 설치기와 서버 exe 의 `--install` 이 같은 규칙으로 동작하며, 등록이 거부·실패하면 이유를 결과에 표시
+- Claude Desktop 은 Microsoft Store 판과 일반 설치판을 각각 처리, ChatGPT 데스크톱 앱은 Codex 와 설정을 공유해 함께 등록
+- 사용자 범위 밖(프로젝트 설정)에 같은 서버가 있으면 경고
+- 설정 파일 수정 전 백업을 `%LOCALAPPDATA%\McpOffice\backup\` 에 파일마다 하나만 보관
 
 ### 0.7.2
 
-- 서버 안내문과 도구 설명을 AI 가 기능 중심으로 이해하도록 정리: 문서 저장·닫기는 별도 도구, Outlook 메일은 초안으로 저장되어 사용자가 Outlook 에서 전송, 메일·작업 본문은 `include_body=true` 로 조회, `outlook_request_sync` 는 Outbox 의 메일도 함께 전송됨을 명시
-- OneNote 안내에서 Excel/Visio 파일 삽입 도구와 `dry_run` 미리보기 사용법을 명확히 설명
-- README 에 소개, 특징(열려 있는 Office 앱에 연결해 문서를 그 자리에서 편집), 서버 목록, 요구 사항 추가
+- 서버 안내문과 도구 설명을 기능 중심으로 정리(문서 저장·닫기는 별도 도구, Outlook 메일은 초안 저장 후 사용자가 전송 등)
+- README 에 소개, 특징, 서버 목록, 요구 사항 추가
 
 ### 0.7.1
 
-- 설치기 시작 시 GitHub 릴리스의 새 버전을 확인하고, 있으면 업그레이드할지 묻습니다(예 → 내려받아 SHA-256 검증 후 교체·재실행, 아니오 → 그대로 사용). 자동 업그레이드는 없습니다
-- AI 클라이언트로 Claude Desktop 등록 지원(`--clients claude-desktop`, Microsoft Store 판과 일반 설치판 모두)
-- 버전 표기를 `릴리스 버전.git 커밋 수`(예 `0.7.1.12`)로 변경. 설치기는 서버별 exe 버전을 비교해 설치/업데이트 상태를 표시
-- 실행 파일이 아닌 파일을 서버로 띄우려 할 때 Windows 의 16비트 응용 프로그램 오류 창으로 자동 설치가 멈추던 문제 수정
-- `todo_list_tasks` 설명 보강(status=open 에 InProgress/Waiting 포함, due=today 는 오늘 마감만)
+- 설치기가 시작할 때 새 릴리스를 확인하고, 동의하면 내려받아 SHA-256 검증 후 업그레이드(자동 업그레이드 없음)
+- Claude Desktop 등록 지원
+- 버전 표기를 `릴리스 버전.git 커밋 수`(예 `0.7.1.12`)로 바꾸고, 설치기가 서버별 설치/업데이트 상태를 표시
+- 실행 파일이 아닌 파일 때문에 16비트 응용 프로그램 오류 창이 뜨며 설치가 멈추던 문제 수정
 
 ### 0.6.2
 
-- C# (.NET Framework 4.8) 단일 exe 서버 7개(excel, word, powerpoint, visio, outlook, outlook_todo, onenote)와 설치기 mcp_microsoft_office.exe
-- 설치/제거 시 폴더를 잡고 있는 서버 프로세스를 강제 종료
+- C# (.NET Framework 4.8) 단일 exe 서버 7개(excel, word, powerpoint, visio, outlook, outlook_todo, onenote)와 설치기
+- 설치·제거 시 폴더를 잡고 있는 서버 프로세스 강제 종료
