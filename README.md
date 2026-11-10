@@ -30,6 +30,29 @@ AI 클라이언트(Claude Desktop, Claude Code 등)가 **지금 열려 있는 Mi
 - Outlook 은 **클래식 Outlook** 이 필요합니다(새 Outlook 은 COM 을 지원하지 않습니다).
 - 서버와 Office 앱은 **같은 권한 수준**으로 실행되어야 합니다. 한쪽만 관리자 권한이면 연결되지 않습니다.
 
+## 지원 Office 버전
+
+최신 데스크톱 Office(Microsoft 365 Apps, COM 16.0)를 기준으로 만들었고, 버전을 이유로 기능을 막지 않습니다.
+
+| 구분 | 버전 | 상태 |
+| --- | --- | --- |
+| **테스트한 버전** | Microsoft 365 Apps `16.0.20527.20150` (Excel, Word, PowerPoint, Outlook, OneNote, Visio 모두 동일) | 검증됨 |
+| 예상 가능 최저 버전 | **Office 2016** (COM 16.0) — Office 2019 / 2021 / 2024 포함 | **미검증(이론상)** |
+| Office 2013 이하 | 연결 시도는 막지 않으나 보장하지 않음 | 미검증 |
+
+- Microsoft 365 외의 버전은 개발 환경에 없어 직접 시험하지 못했습니다. 공식 문서의 적용 버전 표기를 근거로 한 **이론상의 추정**입니다.
+- Office 2016 은 `Office16` 폴더와 COM 16.0 을 쓰므로 같은 방식으로 연결됩니다. 다만 2016 에 없는 기능은 아래처럼 동작합니다.
+
+| 기능 | 필요한 버전 | 구버전에서의 동작 |
+| --- | --- | --- |
+| Excel 동적 배열 수식(`FILTER`, `SORT`, `Formula2`) | Excel 2021 / Microsoft 365 | 일반 수식(`Formula`)으로 대신 기록 (표 열 수식 포함) |
+| Excel 스레드 댓글 | Microsoft 365 | 오류와 함께 메모(`kind='note'`) 사용 안내 |
+| 그 밖에 구버전에 없는 멤버 | 기능마다 다름 | `ok:false` 오류와 `compat` 안내(서버는 계속 동작, 재시도 가능), `com_*` 도구로 우회 |
+
+- 구버전에서 도구가 실패하면 서버가 종료되지 않고 `ok:false` 와 함께 `compat` 안내를 돌려주므로, AI 가 사용자에게 버전 문제임을 알려 줍니다.
+- Office 2016 은 Microsoft 의 지원이 2025년 10월에 종료되었습니다.
+- OneNote 는 데스크톱 앱(OneNote 2016 이상)이 필요하고, Microsoft Store 의 "OneNote for Windows 10"은 지원하지 않습니다. Outlook 은 클래식 Outlook 만 지원합니다.
+
 ## 설치
 
 릴리스의 `mcp_microsoft_office.exe` 를 실행합니다(서버 7개 내장). 서버 exe 는 `release\<버전>\<서버>\` 에도 있습니다.
